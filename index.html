@@ -3,359 +3,792 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CBT Kuis - Belajar Sukses</title>
+    <title>Demo TKA SD Kelas 6 - Belajar Sukses</title>
     <style>
         :root {
-            --primary-blue: #0d6efd;
-            --dark-blue: #1b437c;
-            --bg-light: #f8f9fa;
-            --border-color: #dee2e6;
-            --text-main: #333;
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --secondary: #F59E0B;
+            --bg-color: #F3F4F6;
+            --card-bg: #FFFFFF;
+            --text-main: #1F2937;
+            --text-muted: #6B7280;
+            --danger: #EF4444;
+            --success: #10B981;
+            --gold: #FFD700;
         }
-        * { box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
-        body { margin: 0; padding: 0; background-color: var(--bg-light); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }
-        
-        /* HEADER CBT */
-        .cbt-header { background: white; border-bottom: 2px solid var(--border-color); padding: 15px 30px; display: flex; justify-content: space-between; align-items: flex-end; }
-        .header-left .soal-title { font-size: 1.1rem; color: #555; margin-bottom: 5px; }
-        .header-left .soal-number { font-size: 1.8rem; font-weight: bold; color: black; }
-        .header-left .font-controls { margin-top: 10px; font-size: 0.9rem; color: #666; }
-        .font-controls span { cursor: pointer; margin: 0 5px; font-weight: bold; }
-        .font-controls span:hover { color: var(--primary-blue); }
-        
-        .header-right { text-align: right; }
-        .btn-header { background: var(--primary-blue); color: white; border: none; padding: 8px 15px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; font-weight: bold; margin-left: 5px; display: inline-flex; align-items: center;}
-        .timer-pill { background: white; border: 1px solid #ccc; padding: 7px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; margin-left: 5px; display: inline-block;}
-        .subject-title { margin-top: 10px; font-size: 1rem; font-weight: bold; color: #444; }
 
-        /* MAIN CONTENT - SPLIT SCREEN */
-        .cbt-body { flex: 1; padding: 20px 30px; display: flex; flex-direction: column; }
-        .cbt-card { background: white; border: 1px solid #e0e0e0; border-radius: 8px; flex: 1; display: flex; box-shadow: 0 4px 6px rgba(0,0,0,0.02); overflow: hidden; font-size: 16px; /* Default Font Size */ transition: font-size 0.2s;}
-        
-        .cbt-left { flex: 1; padding: 30px; border-right: 2px dashed var(--border-color); overflow-y: auto; line-height: 1.6; }
-        .cbt-right { flex: 1; padding: 30px; overflow-y: auto; line-height: 1.6; background: #fafafa; }
-        
-        img { max-width: 100%; height: auto; border-radius: 5px; margin: 10px 0; }
-        .question-text { font-weight: 600; margin-bottom: 20px; }
-
-        /* OPTIONS STYLING */
-        .option-item { display: flex; align-items: flex-start; margin-bottom: 15px; cursor: pointer; padding: 8px; border-radius: 5px; transition: 0.2s;}
-        .option-item:hover { background: #eef2f7; }
-        .option-item input[type="radio"], .option-item input[type="checkbox"] { margin-top: 5px; margin-right: 15px; transform: scale(1.3); cursor: pointer;}
-        
-        /* TABLE BENAR/SALAH */
-        .bs-table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; }
-        .bs-table th, .bs-table td { border: 1px solid var(--border-color); padding: 12px; text-align: center; }
-        .bs-table td:first-child { text-align: left; width: 70%; }
-        .bs-table th { background: #fdfdfd; color: #555; }
-        .bs-table input[type="radio"] { transform: scale(1.3); cursor: pointer; }
-
-        /* FOOTER NAV */
-        .cbt-footer-nav { display: flex; justify-content: space-between; padding: 20px 30px; }
-        .btn-nav { padding: 10px 25px; border-radius: 5px; border: none; font-weight: bold; font-size: 0.9rem; cursor: pointer; }
-        .btn-prev { background: #fff; border: 1px solid #ccc; color: #333; }
-        .btn-ragu { background: #ffc107; color: #000; }
-        .btn-next { background: var(--primary-blue); color: white; }
-
-        /* FOOTER BRANDING */
-        .cbt-footer { background: var(--dark-blue); color: white; padding: 10px 30px; display: flex; justify-content: space-between; font-size: 0.8rem; }
-
-        /* LOGIN & RESULT SCREENS */
-        .screen { display: none; }
-        .screen.active { display: flex; flex-direction: column; flex: 1; }
-        .center-box { margin: auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; width: 100%; max-width: 400px; }
-        .center-box input { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #ccc; border-radius: 5px; font-size: 1.1rem; text-align: center; }
-        .center-box .btn-submit { background: var(--primary-blue); color: white; width: 100%; padding: 12px; border: none; border-radius: 5px; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
-        
-        /* MODAL DAFTAR SOAL */
-        #modal-grid { display: none; position: fixed; top: 0; right: 0; bottom: 0; width: 350px; background: white; box-shadow: -5px 0 15px rgba(0,0,0,0.1); z-index: 100; padding: 20px; flex-direction: column; border-left: 4px solid var(--primary-blue);}
-        .grid-header { display: flex; justify-content: space-between; font-weight: bold; border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 15px;}
-        .grid-container { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; overflow-y: auto; }
-        .grid-btn { padding: 10px 0; text-align: center; border: 1px solid #ccc; border-radius: 5px; background: white; cursor: pointer; font-weight: bold; }
-        .grid-btn.answered { background: #0d6efd; color: white; border-color: #0d6efd; }
-        
-        @media (max-width: 768px) {
-            .cbt-card { flex-direction: column; }
-            .cbt-left { border-right: none; border-bottom: 2px dashed #ccc; }
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
         }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            min-height: 90vh;
+        }
+
+        .active-page {
+            display: flex;
+        }
+
+        /* Header & Timer */
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .timer-locked {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: not-allowed;
+        }
+
+        /* Login Page */
+        #login-page {
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .input-group {
+            position: relative;
+            margin: 20px 0;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        button.btn-main {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        button.btn-main:hover {
+            background: var(--primary-hover);
+        }
+
+        /* Quiz Area */
+        .quiz-content {
+            padding: 25px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .wacana-box {
+            background: #FEF3C7;
+            padding: 15px;
+            border-left: 4px solid var(--secondary);
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 0.95em;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .question-text {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .question-text img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin: 10px 0;
+            display: block;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .option-label:hover {
+            background: #F9FAFB;
+            border-color: #D1D5DB;
+        }
+
+        .option-label input {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+
+        .option-label.selected {
+            border-color: var(--primary);
+            background: #EEF2FF;
+        }
+
+        /* Footer Nav & Grid */
+        .quiz-footer {
+            padding: 15px 25px;
+            border-top: 1px solid #E5E7EB;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            background: #E5E7EB;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .nav-btn.next {
+            background: var(--primary);
+            color: white;
+        }
+
+        .cbt-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            padding: 15px;
+            background: #F9FAFB;
+            border-top: 1px solid #E5E7EB;
+            opacity: 0.6;
+            cursor: not-allowed;
+            position: relative;
+        }
+
+        .grid-item {
+            padding: 10px;
+            text-align: center;
+            background: white;
+            border: 1px solid #D1D5DB;
+            border-radius: 6px;
+            font-weight: bold;
+            pointer-events: none;
+        }
+
+        .grid-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        
+        .grid-overlay-btn {
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            cursor: pointer;
+        }
+
+        /* Result Page & Paywall */
+        #result-page {
+            padding: 30px 20px;
+            text-align: center;
+            overflow-y: auto;
+        }
+
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 0 auto 20px;
+            border: 5px solid #C7D2FE;
+        }
+
+        .premium-banner {
+            background: linear-gradient(135deg, #FFD700, #F59E0B);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            color: #78350F;
+            border: 2px solid #D97706;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .premium-banner h3 {
+            margin-bottom: 10px;
+            font-size: 1.4em;
+            color: #92400E;
+        }
+
+        .btn-upgrade {
+            display: inline-block;
+            background: #DC2626;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-decoration: none;
+            margin-top: 15px;
+            animation: blinker 1.5s linear infinite;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.5);
+            border: 2px solid white;
+        }
+
+        @keyframes blinker {
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        .btn-certificate {
+            background: #4B5563;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 30px;
+        }
+
+        /* Affiliate Section */
+        .affiliate-section {
+            text-align: left;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px dashed #D1D5DB;
+        }
+
+        .affiliate-section h3 {
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            color: var(--text-main);
+        }
+
+        .book-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        @media(min-width: 600px) {
+            .book-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        .book-card {
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-card h4 {
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .book-card p {
+            font-size: 0.9em;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+
+        .btn-buy {
+            display: block;
+            text-align: center;
+            background: #10B981;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-buy:hover { background: #059669; }
+
+        .copyright-raksasa {
+            margin-top: 40px;
+            font-size: 1.5em;
+            font-weight: 900;
+            color: #374151;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 20px;
+            background: #E5E7EB;
+            border-radius: 8px;
+        }
+
+        /* SVG Icons */
+        .icon { width: 20px; height: 20px; fill: currentColor; }
     </style>
 </head>
 <body>
 
-    <div id="screen-login" class="screen active">
-        <div class="center-box">
-            <h2 style="color: var(--dark-blue); margin-top: 0;">Portal Ujian CBT</h2>
-            <p style="color: #666;">Masukkan PIN Akses Kuis Anda</p>
-            <input type="password" id="pin-input" placeholder="PIN UJIAN">
-            <button class="btn-submit" onclick="startQuiz()">MASUK</button>
+<div id="login-page" class="container active-page">
+    <h1 style="color: var(--primary); margin-bottom: 10px;" id="display-judul-login"></h1>
+    <p style="color: var(--text-muted); margin-bottom: 20px;">Versi Trial / Demo</p>
+    
+    <div class="input-group">
+        <input type="password" id="pin-input" placeholder="Masukkan PIN Akses">
+        <div class="toggle-password" onclick="togglePassword()">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+        </div>
+    </div>
+    <button class="btn-main" onclick="startQuiz()">MULAI KUIS</button>
+</div>
+
+<div id="quiz-page" class="container">
+    <div class="header">
+        <h3 id="display-judul-quiz" style="font-size: 1.1em;"></h3>
+        <div class="timer-locked" onclick="alertPremium('Timer')">
+            ⏳ Waktu: Terkunci (Premium)
+        </div>
+    </div>
+    
+    <div class="quiz-content">
+        <div id="wacana-container" class="wacana-box"></div>
+        <div id="question-text" class="question-text"></div>
+        <div id="options-container" class="options-container"></div>
+    </div>
+
+    <div class="quiz-footer">
+        <button class="nav-btn" id="btn-prev" onclick="navQuestion(-1)">Sebelumnya</button>
+        <span id="question-counter" style="font-weight: bold; color: var(--text-muted);">1 / 15</span>
+        <button class="nav-btn next" id="btn-next" onclick="navQuestion(1)">Selanjutnya</button>
+    </div>
+
+    <div class="cbt-grid-wrapper" style="position: relative;">
+        <div class="grid-overlay" onclick="alertPremium('Lompat Soal / Navigasi Pintar')">
+            <div class="grid-overlay-btn">🔒 Fitur Premium</div>
+        </div>
+        <div id="cbt-grid" class="cbt-grid"></div>
+    </div>
+</div>
+
+<div id="result-page" class="container">
+    <h2 style="margin-bottom: 20px; color: var(--text-main);">Hasil Ujian Trial</h2>
+    <div class="score-circle" id="final-score">0</div>
+    
+    <button class="btn-certificate" onclick="alertPremium('Cetak Sertifikat')">
+        🖨️ Cetak Sertifikat 🔒
+    </button>
+
+    <div class="premium-banner">
+        <h3>Hebat! Kamu telah menyelesaikan versi Trial.</h3>
+        <p>Ingin akses ke <b>RATUSAN</b> soal berkualitas TKA, fitur Timer, Navigasi Pintar, Pembahasan Lengkap, dan Cetak Sertifikat? Buka potensi belajarmu sekarang!</p>
+        <a href="#" id="link-premium" class="btn-upgrade" target="_blank">🚀 UPGRADE KE PREMIUM SEKARANG</a>
+    </div>
+
+    <div class="affiliate-section">
+        <h3>📚 Rekomendasi Buku Belajar Pilihan</h3>
+        <div class="book-grid">
+            <div class="book-card">
+                <h4 id="buku1-judul"></h4>
+                <p id="buku1-desc"></p>
+                <a href="#" id="buku1-link" class="btn-buy" target="_blank">🛒 Beli Buku Ini</a>
+            </div>
+            <div class="book-card">
+                <h4 id="buku2-judul"></h4>
+                <p id="buku2-desc"></p>
+                <a href="#" id="buku2-link" class="btn-buy" target="_blank">🛒 Beli Buku Ini</a>
+            </div>
         </div>
     </div>
 
-    <div id="screen-quiz" class="screen">
-        <div class="cbt-header">
-            <div class="header-left">
-                <div class="soal-title">Soal nomor</div>
-                <div class="soal-number" id="q-number">1</div>
-                <div class="font-controls">
-                    Ukuran font soal: 
-                    <span style="font-size: 0.9em;" onclick="changeFontSize(14)">A</span>
-                    <span style="font-size: 1.1em;" onclick="changeFontSize(18)">A</span>
-                    <span style="font-size: 1.3em;" onclick="changeFontSize(22)">A</span>
-                </div>
-            </div>
-            <div class="header-right">
-                <button class="btn-header">INFORMASI SOAL</button>
-                <div class="timer-pill">Sisa Waktu : <span id="timer-display">00:00:00</span></div>
-                <button class="btn-header" onclick="toggleGrid()"><svg style="width:16px;height:16px;margin-right:5px;" viewBox="0 0 24 24"><path fill="currentColor" d="M3,3H9V9H3V3M15,3H21V9H15V3M3,15H9V21H3V15M15,15H21V21H15V15Z" /></svg> Daftar Soal</button>
-                <div class="subject-title" id="subject-name">Matematika - SMP Sederajat</div>
-            </div>
-        </div>
-
-        <div class="cbt-body">
-            <div class="cbt-card" id="cbt-content-area">
-                <div class="cbt-left" id="cbt-left">
-                    </div>
-                <div class="cbt-right" id="cbt-right">
-                    </div>
-            </div>
-        </div>
-
-        <div class="cbt-footer-nav">
-            <button class="btn-nav btn-prev" id="btn-prev" onclick="navQuestion(-1)">SOAL SEBELUMNYA</button>
-            <button class="btn-nav btn-ragu">RAGU-RAGU</button>
-            <button class="btn-nav btn-next" id="btn-next" onclick="navQuestion(1)">SOAL SELANJUTNYA</button>
-        </div>
-
-        <div class="cbt-footer">
-            <div>Belajar Sukses - Sistem CBT V8.0</div>
-            <div>&copy; <span id="year"></span> Hak Cipta Dilindungi</div>
-        </div>
+    <div class="copyright-raksasa">
+        © 2026 Copyright "Belajar Sukses". All Rights Reserved.
     </div>
-
-    <div id="screen-result" class="screen">
-        <div class="center-box" style="max-width: 600px;">
-            <h1 style="color: var(--dark-blue);">Ujian Selesai</h1>
-            <p style="font-size: 1.2rem;">Nilai Akhir Anda:</p>
-            <div style="font-size: 5rem; font-weight: bold; color: var(--primary-blue); border: 5px solid var(--primary-blue); width: 180px; height: 180px; line-height: 170px; border-radius: 50%; margin: 20px auto;">
-                <span id="final-score">0</span>
-            </div>
-            <h3 id="result-msg"></h3>
-            <button class="btn-submit" style="margin-top: 20px;" onclick="location.reload()">Selesai</button>
-        </div>
-    </div>
-
-    <div id="modal-grid">
-        <div class="grid-header">
-            <span>Daftar Soal</span>
-            <span style="cursor:pointer; color: red;" onclick="toggleGrid()">TUTUP X</span>
-        </div>
-        <div class="grid-container" id="grid-container">
-            </div>
-    </div>
+</div>
 
 <script>
     // ==========================================
-    // 1. KONFIGURASI DATA UTAMA
+    // 1. KONFIGURASI DATA (FLEKSIBEL)
     // ==========================================
-    const JUDUL_KUIS = "TKA SD - BAHASA INDONESIA"; // Akan tampil di sudut kanan atas
-    const PIN_AKSES = "SUKSES100%";
-    const WAKTU_MENIT = 70;
-    const TARGET_TOTAL_SOAL = 30; // Algoritma baru dijamin mencari 30 soal
+    const JUDUL_KUIS = "DEMO TKA SD KELAS 6";
+    const PIN_AKSES = "COBA123";
+    const TARGET_TOTAL_SOAL = 15;
 
-    // [PENTING] PASTE KESELURUHAN DATA SOAL ANDA DI DALAM BACKTICK (`) DI BAWAH INI
-    const RAW_DATA = `
-[PASTE DATA RAW ANDA DI SINI - PASTIKAN SEMUA SOAL TUNGGAL DAN CLUSTER MASUK]
-`;
+    // Link Jualan Produk Digital
+    const LINK_PEMBELIAN_PREMIUM = "https://lynk.id/belajarsukses";
+
+    // Data Affiliate Buku Fisik
+    const BUKU_1_JUDUL = "Buku Super Drilling TKA SD/MI";
+    const BUKU_1_DESC = "Kumpulan soal terlengkap dengan pembahasan jitu untuk persiapan ujian.";
+    const BUKU_1_LINK = "https://shope.ee/contohlink_buku1";
+
+    const BUKU_2_JUDUL = "Buku Taktik Cerdik Lulus TKA";
+    const BUKU_2_DESC = "Berisi ringkasan materi dan life hack cara cepat menjawab soal.";
+    const BUKU_2_LINK = "https://shope.ee/contohlink_buku2";
+
+    // Data Soal Mentah
+    const RAW_SINGLE = `
+[Tipe: PG] Di sebuah ekosistem laut yang asri, terdapat terumbu karang yang menjadi rumah bagi berbagai **biota**. Apa makna istilah biologi yang dicetak tebal tersebut? | Sekumpulan tumbuhan laut ~ Seluruh flora dan fauna di wilayah tertentu ~ Jenis ikan hias yang langka ~ Batuan yang ada di dasar laut | B | Biota merujuk pada keseluruhan kehidupan (flora dan fauna) di suatu wilayah. 
+[Tipe: PG] Perjalanan dari Jakarta ke Bandung kini lebih cepat berkat adanya kereta cepat. Transportasi **modern** ini sangat diminati masyarakat. Sinonim kata "*modern*" pada kalimat tersebut adalah... | Canggih ~ Lawas ~ Tradisional ~ Terkenal | A | Modern dalam konteks transportasi merujuk pada teknologi yang canggih atau terbaru. 
+[Tipe: PG] Pak Budi adalah **tangan kanan** direktur di perusahaan itu. Makna ungkapan "**tangan kanan**" adalah... | Orang yang kuat ~ Orang kepercayaan ~ Anggota keluarga ~ Orang yang rajin | B | Tangan kanan adalah idiom untuk orang yang sangat dipercaya oleh atasan. 
+[Tipe: PG] Teks cerita misteri: "Keesokan paginya, kotak kayu rahasia di atas meja kakek ternyata telah terbuka gemboknya. Namun, isinya bukanlah tumpukan koin emas seperti yang kuduga selama ini, melainkan secarik peta tua kumal dengan tanda silang merah berdarah di ujungnya." Kalimat manakah yang paling memancing rasa penasaran pembaca dari kutipan tersebut? | Keesokan paginya, kotak kayu rahasia di atas meja kakek telah terbuka ~ Kotak kayu misterius itu berada di atas meja ~ Isinya bukanlah tumpukan koin emas seperti yang kuduga ~ Terdapat secarik peta tua kumal dengan tanda silang merah berdarah di ujungnya | D | Peta yang memiliki tanda spesifik (silang merah) memberikan petunjuk adanya teka-teki baru, membuat pembaca bertanya-tanya arah petualangan selanjutnya.
+[Tipe: PG] Dialog Perpisahan Kelas: Siti: "Jaga dirimu baik-baik di SMP seberang pulau sana, Lani. Jangan lupa kirimi aku pesan setiap minggu, ya." Lani: "(Menggenggam tangan Siti) Tentu saja, Siti. Kamu adalah tempat terbaikku berbagi rahasia selama 6 tahun ini. Aku pasti akan sangat merindukanmu." Kesimpulan kedalaman hubungan antartokoh berdasarkan dialog tersebut adalah... | Mereka hanyalah teman sekelas biasa yang kebetulan duduk sebangku ~ Mereka memiliki ikatan persahabatan sejati yang sangat kuat dan emosional ~ Mereka adalah saudara kandung yang akan dipisahkan ~ Mereka baru saja saling mengenal saat kelulusan | B | Dialog "tempat terbaikku berbagi rahasia" dan gestur genggaman tangan mencerminkan tingkat kepercayaan dan persahabatan yang sangat dalam.
+[Tipe: PG] Sebuah cerita inspiratif menceritakan perjuangan tokoh penemu, Thomas Alva Edison, yang dikabarkan gagal ribuan kali sebelum akhirnya berhasil menemukan bola lampu yang menyala. Kutipan pernyataan manakah dari tokoh tersebut yang paling memotivasi semangat pantang menyerah pelajar? | "Lampu adalah penemuan yang sangat mahal pembuatannya pada zamanku." ~ "Saya sebenarnya tidak gagal, saya hanya menemukan 10.000 cara yang ternyata tidak berhasil." ~ "Saya selalu bekerja keras di sebuah laboratorium kecil yang sangat gelap setiap malam." ~ "Dibutuhkan banyak sekali bahan baku kaca untuk membuat bola lampu buatan saya." | B | Membingkai kegagalan sebagai "cara yang tidak berhasil" adalah pola pikir (mindset) positif yang luar biasa memotivasi pembaca untuk tidak menyerah.
+[Tipe: PG] Di dalam ekosistem laut yang sehat terdapat beragam biota laut yang hidup saling bergantungan. Makna istilah biologi yang dicetak tebal pada kalimat tersebut adalah... | Seluruh flora dan fauna di suatu wilayah ~ Kumpulan tumbuhan laut yang hidup di dasar karang ~ Jenis ikan pemakan plankton yang ukurannya kecil ~ Bebatuan karang tempat ikan bersembunyi | A | Biota adalah keseluruhan kehidupan flora dan fauna yang terdapat di dalam suatu daerah atau ekosistem tertentu.
+[Tipe: PG] Cuaca di padang rumput itu sangat terik pada siang hari sehingga tanahnya menjadi kering. Antonim dari kata sifat yang mendeskripsikan kondisi alam tersebut adalah... | Panas ~ Teduh ~ Cerah ~ Gersang | B | Antonim atau lawan kata dari terik (sangat panas) adalah teduh.
+[Tipe: PG] Keindahan pemandangan Pantai Kuta di sore hari sungguh *menawan hati* setiap turis asing yang datang. Makna konotatif positif dari frasa bercetak miring tersebut adalah... | Sangat indah dan menarik perhatian ~ Sangat luas dan cukup berbahaya ~ Sangat sepi dan menenangkan ~ Sangat ramai dan penuh sesak | A | Frasa 'menawan hati' memiliki konotasi positif yang berarti sangat menarik, memikat, atau indah dipandang.
+[Tipe: PG] Susunlah kata-kata acak berikut menjadi kalimat efektif yang benar: (1) membeli (2) apotek (3) ibu (4) di (5) obat. | 3-1-5-4-2 ~ 3-1-4-5-2 ~ 5-1-3-4-2 ~ 3-5-1-4-2 | A | Susunan kalimat efektif berpedoman pada pola Subjek-Predikat-Objek-Keterangan (S-P-O-K) yaitu "Ibu (3) membeli (1) obat (5) di (4) apotek (2)".
+[Tipe: PG] "Kemarin sore aku antri cukup lama saat membeli tiket di stasiun," kata paman. Penggunaan kata tidak baku dalam kalimat dialog tersebut jika diperbaiki menjadi kata baku adalah... | Antre ~ Mengantri ~ Antrian ~ Ngantri | A | Kata baku yang benar sesuai Pedoman Umum Ejaan Bahasa Indonesia (PUEBI) adalah "antre".
+[Tipe: PGK] Manakah kelompok kata di bawah ini yang seluruhnya termasuk dalam kosakata bidang olahraga sepak bola? | Gawang ~ Penalti ~ Kok ~ Servis | A, B | Gawang dan penalti adalah istilah dalam sepak bola. Kok dan servis adalah istilah dalam bulu tangkis/tenis.
+[Tipe: PG] Bacalah penggalan puisi anak berikut: "Di pagi hari yang cerah aku melihat seekor kupu-kupu hinggap di atas **bunga** yang sedang mekar." Makna denotatif dari kata yang dicetak tebal adalah... | Gadis desa yang sangat cantik rupawan ~ Bagian tumbuhan yang akan menjadi buah ~ Seseorang pahlawan yang menjadi idola ~ Hasil dari tabungan yang disimpan di bank | B | Makna denotatif adalah makna yang sebenarnya. Bunga dalam konteks alam merujuk pada bagian tumbuhan.
+[Tipe: PG] Aku adalah salah satu benda langit yang bercahaya. Aku memancarkan cahayaku sendiri yang sangat panas dan aku menjadi pusat tata surya. Benda langit apakah aku? | Bumi ~ Bulan ~ Bintang ~ Matahari | D | Matahari adalah bintang yang menjadi pusat tata surya dan memancarkan cahayanya sendiri.
+[Tipe: PG] Tanaman obat tradisional ini memiliki rimpang dengan bagian dalam berwarna kuning jingga. Masyarakat biasa memarut dan memeras airnya untuk dibuat jamu penambah nafsu makan atau meredakan nyeri perut. Nama tanaman obat tersebut adalah... | Jahe ~ Kencur ~ Kunyit ~ Lengkuas | C | Kunyit memiliki ciri khas warna rimpang kuning jingga dan biasa dipakai sebagai jamu tradisional.
+[Tipe: PG] Permainan tradisional anak-anak ini dilakukan dengan melompat menggunakan satu kaki pada kotak-kotak yang digambar di atas tanah. Sebelum melompat pemain harus melempar batu pipih atau gacuk ke dalam kotak. Nama permainan tradisional tersebut adalah... | Engklek ~ Gobak Sodor ~ Congklak ~ Petak Umpet | A | Ciri khas permainan engklek adalah melompat dengan satu kaki pada pola kotak di tanah menggunakan gacuk.
+    `;
+
+    const RAW_CLUSTER = `
+###
+[WACANA: Rahasia Kesehatan di Musim Pancaroba] Kondisi cuaca yang tidak menentu belakangan ini membuat tubuh rentan terserang penyakit. Perubahan suhu dari **panas** ke dingin yang tiba-tiba sering kali memicu gangguan kesehatan. Untuk menjaga imunitas, dokter menyarankan konsumsi vitamin secara rutin. Jika muncul gejala (1)... seperti demam atau batuk, sebaiknya segera periksa ke (2)... terdekat. Selain itu, menjaga kebersihan diri dengan rajin mencuci tangan sangatlah penting. Langkah mencuci tangan dimulai dengan membasahi tangan, memakai sabun, menggosok telapak serta punggung tangan, membersihkan sela jari, lalu membilasnya dengan air mengalir hingga bersih.
+[Tipe: PG] Apa antonim dari kata "**panas**" yang mendeskripsikan kondisi alam pada teks tersebut? | Hangat ~ Sejuk ~ Dingin ~ Terik | C | Antonim atau lawan kata panas dalam konteks suhu adalah dingin. 
+[Tipe: PG] Isilah rumpang (1) dan (2) pada teks dengan istilah medis yang tepat! | (1) Gejala - (2) Apotek ~ (1) Diagnosis - (2) Laboratorium ~ (1) Klinis - (2) Puskesmas ~ (1) Pasien - (2) Apotek | C | Istilah medis sederhana yang tepat untuk melengkapi teks adalah klinis (terkait gejala) dan puskesmas (tempat periksa). 
+[Tipe: PGK] Manakah langkah-langkah mencuci tangan yang benar sesuai teks? | Membasahi tangan dan memakai sabun ~ Menggosok punggung tangan ~ Membersihkan sela-sela jari ~ Mengeringkan dengan baju | A, B, C | Berdasarkan teks, langkahnya adalah membasahi, sabun, gosok punggung, dan sela jari.
+###
+###
+[WACANA: Keajaiban Metamorfosis Katak] Katak merupakan hewan amfibi yang mengalami siklus hidup unik. Proses ini diawali dari telur yang diletakkan induknya di dalam air. Setelah beberapa hari, telur menetas menjadi kecebong atau berudu yang bernapas dengan insang. Seiring berjalannya waktu, pada kecebong tumbuh kaki belakang, disusul kaki depan, dan ekornya mulai memendek hingga terbentuklah katak muda. Akhirnya, katak muda tumbuh menjadi katak dewasa yang bernapas menggunakan paru-paru dan kulit. Pengamatan ini dicatat dalam tabel pertumbuhan untuk melihat perubahan panjang tubuhnya setiap minggu.
+[Tipe: BS] Tentukan benar atau salah pernyataan mengenai siklus hidup katak berdasarkan teks: | Kecebong bernapas menggunakan paru-paru (Salah) ~ Kaki depan tumbuh lebih dulu daripada kaki belakang (Salah) ~ Katak dewasa bernapas dengan paru-paru dan kulit (Benar) | - | Kecebong menggunakan insang, kaki belakang tumbuh lebih dulu, dan dewasa menggunakan paru-paru/kulit. 
+[Tipe: PG] [IMG: https://i.ibb.co.com/Psz3GG0n/Gemini-Generated-Image-9b5iel9b5iel9b5i.png] Bagian diagram yang kosong setelah fase "Telur" dan sebelum "Katak Muda" seharusnya diisi dengan... | Katak Dewasa ~ Kecebong ~ Telur Ikan ~ Kepompong | B | Setelah telur menetas, fase berikutnya dalam metamorfosis katak adalah kecebong/berudu. 
+[Tipe: PGK] Informasi apa saja yang dapat dimasukkan ke dalam tabel data hasil laporan pengamatan teks di atas? | Nama pengamat ~ Panjang tubuh katak setiap minggu ~ Tahapan perkembangan yang terjadi ~ Harga pakan katak | B, C | Teks menyebutkan pencatatan perubahan panjang tubuh dan tahapan pertumbuhan.
+###
+    `;
 
     // ==========================================
-    // 2. NEW ROBUST MIXER ENGINE V8.0
+    // 2. ENGINE DASAR & PARSER
     // ==========================================
-    let RAW_SINGLE = [];
-    let RAW_CLUSTER = [];
-    let finalQuestionList = [];
+    let questionsData = [];
+    let currentIndex = 0;
     let userAnswers = {};
-    let currentQIndex = 0;
-    let timerInterval;
-    let timeLeft = WAKTU_MENIT * 60;
 
-    document.getElementById('subject-name').innerText = JUDUL_KUIS;
-    document.getElementById('year').innerText = new Date().getFullYear();
-
-    function parseRawData() {
-        const singleBlock = RAW_DATA.split('--- START SOAL TUNGGAL ---')[1]?.split('--- END SOAL TUNGGAL ---')[0] || "";
-        const clusterBlock = RAW_DATA.split('--- START SOAL CLUSTER ---')[1]?.split('--- END SOAL CLUSTER ---')[0] || "";
-
-        singleBlock.split('\n').forEach(line => {
-            if (line.trim().startsWith('[')) RAW_SINGLE.push(line.trim());
-        });
-
-        clusterBlock.split('###').forEach(block => {
-            if (block.trim()) {
-                let lines = block.trim().split('\n');
-                let wacana = "";
-                let qs = [];
-                lines.forEach(l => {
-                    if (l.startsWith('[WACANA:')) wacana += l.replace('[WACANA:', '').replace(']', '').trim() + "<br><br>";
-                    else if (l.trim().startsWith('[')) qs.push(l.trim());
-                });
-                if (qs.length > 0) RAW_CLUSTER.push({ wacana, questions: qs });
-            }
-        });
+    function parseMarkdown(text) {
+        // Auto-Cleaner: Hapus nomor bawaan teks soal ("1. ", "2. ")
+        text = text.replace(/^\d+\.\s*/, '');
+        // Markdown Renderer: Bold, Italic, Enter, IMG
+        return text
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/<br>/g, '<br>')
+            .replace(/\[IMG:\s*(.*?)\]/g, '<img src="$1" alt="Gambar Soal">');
     }
 
-    function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
-    }
+    function extractQuestions(rawSingle, rawCluster) {
+        let tempQuestions = [];
 
-    function generateMixer() {
-        // Persiapkan pool data
-        let singlePool = shuffleArray(RAW_SINGLE.map(q => ({ wacana: null, raw: q })));
-        let clusterPool = shuffleArray(RAW_CLUSTER.map(c => ({ wacana: c.wacana, questions: [...c.questions] })));
-        let qList = [];
-
-        // Fungsi bantu Tarik Soal Tunggal
-        const pullSingles = (n) => {
-            for(let i=0; i<n; i++) {
-                if(singlePool.length > 0) qList.push(singlePool.pop());
-            }
-        };
-
-        // Fungsi bantu Tarik Soal Cluster (Max 2 per putaran agar merata)
-        const pullClusters = (n) => {
-            let pulled = 0;
-            let loopCount = 0; // Mencegah infinite loop
-            while(pulled < n && clusterPool.length > 0 && loopCount < 100) {
-                let c = clusterPool[loopCount % clusterPool.length];
-                if (c.questions.length > 0) {
-                    qList.push({ wacana: c.wacana, raw: c.questions.pop() });
-                    pulled++;
-                }
-                loopCount++;
-                clusterPool = clusterPool.filter(cl => cl.questions.length > 0);
-            }
-        };
-
-        // Eksekusi Urutan (Bug Fixed: Dijamin menyentuh kuota asalkan data cukup)
-        pullSingles(3);    // No 1-3
-        pullClusters(7);   // No 4-10
-        pullSingles(3);    // No 11-13
-        pullClusters(7);   // No 14-20
-        
-        // Penuhi sisa kuota hingga mencapai TARGET_TOTAL_SOAL (30)
-        let remainingNeeded = TARGET_TOTAL_SOAL - qList.length;
-        if (remainingNeeded > 0) {
-            let leftovers = [];
-            leftovers.push(...singlePool);
-            clusterPool.forEach(c => {
-                c.questions.forEach(q => leftovers.push({ wacana: c.wacana, raw: q }));
-            });
-            shuffleArray(leftovers);
-            
-            for(let i=0; i<remainingNeeded; i++) {
-                if(leftovers.length > 0) qList.push(leftovers.pop());
-            }
-        }
-
-        finalQuestionList = qList;
-        buildGrid();
-    }
-
-    // ==========================================
-    // 3. UI RENDER ENGINE (SPLIT SCREEN CBT)
-    // ==========================================
-    function parseString(str) {
-        return str.replace(/\[IMG:\s*(.+?)\]/g, '<img src="$1" alt="Gambar Pendukung">');
-    }
-
-    function changeFontSize(px) {
-        document.getElementById('cbt-content-area').style.fontSize = px + 'px';
-    }
-
-    function renderQuestion(index) {
-        if(index < 0 || index >= finalQuestionList.length) return;
-        currentQIndex = index;
-        let qData = finalQuestionList[index];
-        let parts = qData.raw.split('|').map(s => s.trim());
-        
-        let qType = parts[0].match(/\[Tipe:\s*([^\]]+)\]/)[1];
-        let qText = parts[0].replace(/\[Tipe:\s*[^\]]+\]/, '').trim();
-        let optionsStr = parts[1] || "";
-
-        document.getElementById('q-number').innerText = index + 1;
-        
-        let leftPane = document.getElementById('cbt-left');
-        let rightPane = document.getElementById('cbt-right');
-        
-        // LOGIKA PEMBAGIAN LAYAR (Sesuai Gambar Referensi)
-        if (qData.wacana) {
-            // Jika ada Wacana (Cluster): Wacana di Kiri, Soal & Opsi di Kanan
-            leftPane.innerHTML = parseString(qData.wacana);
-            rightPane.innerHTML = `<div class="question-text">${parseString(qText)}</div>`;
-        } else {
-            // Jika Soal Tunggal: Soal di Kiri, Opsi di Kanan
-            leftPane.innerHTML = `<div class="question-text" style="font-size:1.1em;">${parseString(qText)}</div>`;
-            rightPane.innerHTML = `<div class="question-text" style="color:#666; font-size:0.9em; border-bottom: 1px solid #ddd; padding-bottom:10px;">Pilih jawaban yang paling tepat:</div>`;
-        }
-
-        // RENDER OPSI JAWABAN (Di Kolom Kanan)
-        let opts = optionsStr.split('~').map(s => s.trim());
-        
-        if (qType === 'BS') {
-            let tableHTML = `<table class="bs-table"><tr><th>Pernyataan</th><th width="70">Benar</th><th width="70">Salah</th></tr>`;
-            opts.forEach((opt, i) => {
-                let stmtMatch = opt.match(/(.+?)\s*\((Benar|Salah)\)/i);
-                let stmtText = stmtMatch ? stmtMatch[1] : opt;
-                let savedAns = userAnswers[`${index}_${i}`] || "";
+        // Parse Single
+        const singleMatches = rawSingle.match(/\[Tipe:\s*([A-Z]+)\](.*?)\|(.*?)\|(.*?)\|/g);
+        if(singleMatches) {
+            singleMatches.forEach(match => {
+                const parts = match.split('|');
+                const typeStr = parts[0].match(/\[Tipe:\s*([A-Z]+)\]/)[1];
+                const questionText = parts[0].replace(/\[Tipe:\s*[A-Z]+\]/, '').trim();
+                const options = parts[1].trim();
+                const answer = parts[2].trim();
                 
-                tableHTML += `<tr>
-                    <td>${parseString(stmtText)}</td>
-                    <td><input type="radio" name="bs_${index}_${i}" value="Benar" onchange="saveAnswer('${index}_${i}', 'Benar')" ${savedAns==='Benar'?'checked':''}></td>
-                    <td><input type="radio" name="bs_${index}_${i}" value="Salah" onchange="saveAnswer('${index}_${i}', 'Salah')" ${savedAns==='Salah'?'checked':''}></td>
-                </tr>`;
-            });
-            tableHTML += `</table>`;
-            rightPane.innerHTML += tableHTML;
-        } 
-        else if (qType === 'PGK') {
-            opts.forEach((opt, i) => {
-                let val = String.fromCharCode(65 + i);
-                let savedArr = userAnswers[index] || [];
-                rightPane.innerHTML += `<label class="option-item">
-                    <input type="checkbox" name="q_${index}" value="${val}" onchange="saveAnswerPGK(${index}, '${val}', this.checked)" ${savedArr.includes(val)?'checked':''}> 
-                    <span>${val}. ${parseString(opt)}</span>
-                </label>`;
-            });
-        }
-        else { // Standar PG
-            opts.forEach((opt, i) => {
-                let val = String.fromCharCode(65 + i);
-                let savedAns = userAnswers[index] || "";
-                rightPane.innerHTML += `<label class="option-item">
-                    <input type="radio" name="q_${index}" value="${val}" onchange="saveAnswer('${index}', '${val}')" ${savedAns===val?'checked':''}> 
-                    <span>${val}. ${parseString(opt)}</span>
-                </label>`;
+                tempQuestions.push({
+                    type: typeStr,
+                    wacana: null,
+                    text: parseMarkdown(questionText),
+                    options: options.split('~').map(o => parseMarkdown(o.trim())),
+                    correctKey: answer
+                });
             });
         }
 
-        // Navigasi Bawah
-        document.getElementById('btn-prev').style.visibility = index === 0 ? 'hidden' : 'visible';
-        let btnNext = document.getElementById('btn-next');
-        if(index === finalQuestionList.length - 1) {
-            btnNext.innerText = "SELESAI UJIAN";
-            btnNext.style.background = "#28a745"; // Warna Hijau
-            btnNext.onclick = confirmFinish;
+        // Parse Cluster
+        const clusters = rawCluster.split('###').filter(c => c.trim() !== '');
+        clusters.forEach(cluster => {
+            const wacanaMatch = cluster.match(/\[WACANA:(.*?)\](.*?)(\[Tipe:|$)/s);
+            let wacanaHTML = null;
+            if(wacanaMatch) {
+                wacanaHTML = `<strong>${wacanaMatch[1].trim()}</strong><br>${parseMarkdown(wacanaMatch[2].trim())}`;
+            }
+
+            const clusterMatches = cluster.match(/\[Tipe:\s*([A-Z]+)\](.*?)\|(.*?)\|(.*?)\|/g);
+            if(clusterMatches) {
+                clusterMatches.forEach(match => {
+                    const parts = match.split('|');
+                    const typeStr = parts[0].match(/\[Tipe:\s*([A-Z]+)\]/)[1];
+                    const questionText = parts[0].replace(/\[Tipe:\s*[A-Z]+\]/, '').trim();
+                    const options = parts[1].trim();
+                    const answer = parts[2].trim();
+                    
+                    tempQuestions.push({
+                        type: typeStr,
+                        wacana: wacanaHTML,
+                        text: parseMarkdown(questionText),
+                        options: options.split('~').map(o => parseMarkdown(o.trim())),
+                        correctKey: answer
+                    });
+                });
+            }
+        });
+
+        // Potong sesuai TARGET_TOTAL_SOAL (Mixer Soal)
+        return tempQuestions.slice(0, TARGET_TOTAL_SOAL);
+    }
+
+    // ==========================================
+    // 3. LOGIKA UI & INTERAKSI
+    // ==========================================
+    function initApp() {
+        document.getElementById('display-judul-login').innerText = JUDUL_KUIS;
+        document.getElementById('display-judul-quiz').innerText = JUDUL_KUIS;
+        
+        // Setup Result Page Links & Texts
+        document.getElementById('link-premium').href = LINK_PEMBELIAN_PREMIUM;
+        
+        document.getElementById('buku1-judul').innerText = BUKU_1_JUDUL;
+        document.getElementById('buku1-desc').innerText = BUKU_1_DESC;
+        document.getElementById('buku1-link').href = BUKU_1_LINK;
+        
+        document.getElementById('buku2-judul').innerText = BUKU_2_JUDUL;
+        document.getElementById('buku2-desc').innerText = BUKU_2_DESC;
+        document.getElementById('buku2-link').href = BUKU_2_LINK;
+
+        questionsData = extractQuestions(RAW_SINGLE, RAW_CLUSTER);
+    }
+
+    function togglePassword() {
+        const input = document.getElementById('pin-input');
+        input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    function alertPremium(feature) {
+        alert(`Buka versi Premium untuk fitur ${feature}!`);
+    }
+
+    function startQuiz() {
+        const pin = document.getElementById('pin-input').value;
+        if(pin !== PIN_AKSES) {
+            alert("PIN Akses salah!");
+            return;
+        }
+        
+        document.getElementById('login-page').classList.remove('active-page');
+        document.getElementById('quiz-page').classList.add('active-page');
+        
+        renderGrid();
+        showQuestion(0);
+    }
+
+    function renderGrid() {
+        const gridContainer = document.getElementById('cbt-grid');
+        gridContainer.innerHTML = '';
+        for(let i = 0; i < questionsData.length; i++) {
+            const item = document.createElement('div');
+            item.className = 'grid-item';
+            item.innerText = i + 1;
+            gridContainer.appendChild(item);
+        }
+    }
+
+    function showQuestion(index) {
+        if(index < 0 || index >= questionsData.length) return;
+        currentIndex = index;
+        const q = questionsData[index];
+
+        // Counter
+        document.getElementById('question-counter').innerText = `${index + 1} / ${questionsData.length}`;
+
+        // Wacana
+        const wacanaBox = document.getElementById('wacana-container');
+        if(q.wacana) {
+            wacanaBox.innerHTML = q.wacana;
+            wacanaBox.style.display = 'block';
         } else {
-            btnNext.innerText = "SOAL SELANJUTNYA";
-            btnNext.style.background = "var(--primary-blue)";
+            wacanaBox.style.display = 'none';
+        }
+
+        // Teks Soal
+        document.getElementById('question-text').innerHTML = q.text;
+
+        // Opsi (Safe Separator & UI BS)
+        const optContainer = document.getElementById('options-container');
+        optContainer.innerHTML = '';
+
+        const alphabet = ['A', 'B', 'C', 'D', 'E'];
+        
+        q.options.forEach((optText, i) => {
+            const label = document.createElement('label');
+            label.className = 'option-label';
+            
+            const input = document.createElement('input');
+            input.name = `soal_${index}`;
+            
+            // Konfigurasi Tipe Soal
+            if(q.type === 'PGK') {
+                input.type = 'checkbox';
+                input.value = alphabet[i];
+                if(userAnswers[index] && userAnswers[index].includes(alphabet[i])) {
+                    input.checked = true;
+                    label.classList.add('selected');
+                }
+            } else if (q.type === 'BS') {
+                input.type = 'radio';
+                input.value = optText; // Simpan teks aslinya
+                if(userAnswers[index] === optText) {
+                    input.checked = true;
+                    label.classList.add('selected');
+                }
+            } else {
+                input.type = 'radio';
+                input.value = alphabet[i];
+                if(userAnswers[index] === alphabet[i]) {
+                    input.checked = true;
+                    label.classList.add('selected');
+                }
+            }
+
+            input.addEventListener('change', (e) => saveAnswer(index, q.type, e.target));
+
+            label.appendChild(input);
+            label.innerHTML += q.type === 'BS' ? optText : `<b>${alphabet[i]}.</b>&nbsp;&nbsp;${optText}`;
+            optContainer.appendChild(label);
+        });
+
+        // Navigasi Button State
+        document.getElementById('btn-prev').style.visibility = index === 0 ? 'hidden' : 'visible';
+        
+        const btnNext = document.getElementById('btn-next');
+        if(index === questionsData.length - 1) {
+            btnNext.innerText = 'Selesai';
+            btnNext.onclick = finishQuiz;
+        } else {
+            btnNext.innerText = 'Selanjutnya';
             btnNext.onclick = () => navQuestion(1);
         }
-        
-        updateGridUI();
     }
 
-    // ==========================================
-    // 4. LOGIKA JAWABAN & NAVIGASI GRID
+    function saveAnswer(index, type, target) {
+        if(type === 'PGK') {
+            if(!userAnswers[index]) userAnswers[index] = [];
+            if(target.checked) {
+                userAnswers[index].push(target.value);
+            } else {
+                userAnswers[index] = userAnswers[index].filter(v => v !== target.value);
+            }
+        } else {
+            userAnswers[index] = target.value;
+        }
+
+        // Update styling
+        const labels = document.querySelectorAll('.option-label');
+        if(type !== 'PGK') {
+            labels.forEach(l => l.classList.remove('selected'));
+        }
+        if(target.checked) {
+            target.parentElement.classList.add('selected');
+        } else {
+            target.parentElement.classList.remove('selected');
+        }
+    }
+
+    function navQuestion(dir) {
+        showQuestion(currentIndex + dir);
+    }
+
+    function finishQuiz() {
+        if(!confirm("Anda yakin ingin mengakhiri kuis Trial ini?")) return;
+        
+        // Hitung Skor Sederhana (Hanya untuk tipe PG biasa demi demo)
+        let correctCount = 0;
+        questionsData.forEach((q, i) => {
+            if(q.type === 'PG' && userAnswers[i] === q.correctKey) {
+                correctCount++;
+            }
+        });
+        
+        // Estimasi nilai (Skala 100 berdasarkan total soal PG)
+        const totalPG = questionsData.filter(q => q.type === 'PG').length || 1;
+        const score = Math.round((correctCount / totalPG) * 100);
+
+        document.getElementById('final-score').innerText = score;
+
+        document.getElementById('quiz-page').classList.remove('active-page');
+        document.getElementById('result-page').classList.add('active-page');
+    }
+
+    // Initialize on load
+    window.onload = initApp;
+</script>
+
+</body>
+</html>
