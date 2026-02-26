@@ -6,7 +6,7 @@
     <title>Demo TKA SD Kelas 6 - Belajar Sukses</title>
     <style>
         :root {
-            /* Warna akurat berdasarkan Screenshot */
+            /* Warna akurat berdasarkan Screenshot Premium */
             --bg-blue-login: #185093;
             --btn-navy: #0E3A75;
             --accent-gold: #D7A83B;
@@ -118,7 +118,7 @@
         }
 
         /* =========================================
-           2. HALAMAN KUIS (PREMIUM UI MATCH)
+           2. HALAMAN KUIS (PREMIUM UI)
            ========================================= */
         #quiz-page {
             display: flex;
@@ -217,7 +217,7 @@
             line-height: 1.6;
         }
 
-        /* Opsi Pilihan Ganda (PG/PGK) */
+        /* Opsi PG/PGK */
         .options-container {
             display: flex;
             flex-direction: column;
@@ -252,26 +252,10 @@
             text-align: center;
         }
         .bs-table th:first-child, .bs-table td:first-child { text-align: left; }
-        .bs-table th {
-            background: var(--btn-navy);
-            color: white;
-            font-weight: 600;
-            padding: 12px;
-        }
+        .bs-table th { background: var(--btn-navy); color: white; font-weight: 600; padding: 12px; }
         .bs-table tr:nth-child(even) { background-color: #F9FAFB; }
-        .bs-radio-label {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            width: 100%;
-            height: 100%;
-        }
-        .bs-radio {
-            transform: scale(1.4);
-            accent-color: var(--btn-navy);
-            cursor: pointer;
-        }
+        .bs-radio-label { display: flex; justify-content: center; align-items: center; cursor: pointer; width: 100%; height: 100%; }
+        .bs-radio { transform: scale(1.4); accent-color: var(--btn-navy); cursor: pointer; }
 
         .card-footer {
             padding: 15px 25px;
@@ -333,12 +317,11 @@
         }
 
         /* =========================================
-           3. HALAMAN HASIL
+           3. HALAMAN HASIL & FOOTER
            ========================================= */
         #result-page {
             max-width: 800px; margin: 40px auto; background: white; border-radius: 12px;
-            padding: 40px 40px 20px 40px; /* Padding bawah dikurangi untuk footer */
-            text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            padding: 40px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
 
         .score-circle {
@@ -364,19 +347,25 @@
         .book-card { border: 1px solid var(--border-light); border-radius: 10px; padding: 20px; border-left: 4px solid var(--btn-navy); }
         .btn-buy { display: block; text-align: center; background: #10B981; color: white; text-decoration: none; padding: 12px; border-radius: 6px; font-weight: bold; margin-top: 15px; }
         
-        /* CSS untuk Footer Copyright */
-        .copyright-footer {
-            margin-top: 50px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-light);
-            color: var(--text-muted);
-            font-size: 0.9em;
+        /* FOOTER COPYRIGHT RAKSASA */
+        .copyright-raksasa {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: var(--bg-light);
+            border-radius: 8px;
+            color: var(--btn-navy);
+            font-size: 1.4em;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 2px solid var(--border-light);
         }
 
         @media(max-width: 800px) {
             .quiz-container { flex-direction: column; }
             .sidebar { width: 100%; }
             .book-grid { grid-template-columns: 1fr; }
+            .copyright-raksasa { font-size: 1.1em; }
         }
     </style>
 </head>
@@ -461,8 +450,8 @@
         </div>
     </div>
 
-    <div class="copyright-footer">
-        © 2026 Copyright <b>Belajar Sukses</b>. All Rights Reserved.
+    <div class="copyright-raksasa">
+        © 2026 Copyright "Belajar Sukses".<br>All Rights Reserved.
     </div>
 </div>
 
@@ -734,7 +723,7 @@
         document.getElementById('final-score').innerText = Math.round((correctCount / (totalQuestions || 1)) * 100);
         document.getElementById('quiz-page').classList.add('hidden');
         document.getElementById('result-page').classList.remove('hidden');
-        document.body.style.backgroundColor = "var(--bg-light)"; // Pastikan background tetap abu-abu
+        document.body.style.backgroundColor = "var(--bg-light)"; 
     }
 
     window.onload = initApp;
